@@ -5,19 +5,35 @@ import org.apache.ibatis.type.JdbcType;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Component
 public interface ProductMapper {
 
-    @Select("SELECT product_id, external_reference_id, states FROM CAT_PRODUCT WHERE product_id = #{productID}")
+    @Select("WITH pid AS (" +
+            "  SELECT product_id FROM cat_product WHERE product_id = #{productID} and parent_product_id is null" +
+            "  UNION" +
+            "  SELECT parent_product_id as product_id FROM cat_product WHERE product_id = #{productID}" +
+            ")" +
+            "SELECT product_id," +
+            "       external_reference_id," +
+            "       parent_product_id," +
+            "       states " +
+            "  FROM CAT_PRODUCT " +
+            " WHERE product_id in (select product_id from pid)")
     @ResultType(HashMap.class)
     @Results({
-        @Result(property = "STATES", column = "STATES", javaType = Map.class, jdbcType = JdbcType.VARCHAR, typeHandler = XMLTypeHandler.class)
+        @Result(property = "STATES", column = "STATES", javaType = Map.class, jdbcType = JdbcType.VARCHAR, typeHandler = VarCharXMLTypeHandler.class)
     })
     Map<String, ?> getMetadata(@Param("productID") String productID);
 
-    @Select("SELECT product_id, " +
+    @Select("WITH pid AS (" +
+            "  SELECT #{productID} as product_id FROM dual " +
+            "  UNION" +
+            "  SELECT product_id as product_id FROM cat_product WHERE parent_product_id = #{productID}" +
+            ")" +
+            "SELECT product_id, " +
             "       product_data_id, " +
             "       display_name, " +
             "       short_description, " +
@@ -30,15 +46,15 @@ public interface ProductMapper {
             "       is_orderable, " +
             "       is_reviewable, " +
             "       keywords, " +
-            "       to_char(extended_attributes) as extended_attributes " +
+            "       xmltype(extended_attributes) as extended_attributes " +
             "  FROM CAT_PRODUCT_DATA " +
-            " WHERE product_id = #{productID} " +
+            " WHERE product_id in (SELECT product_id FROM pid)" +
             "   and version = #{version} " +
             "   and locale = #{locale}")
     @ResultType(HashMap.class)
     @Results({
-            @Result(property = "EXTENDED_ATTRIBUTES", column = "EXTENDED_ATTRIBUTES", javaType = Map.class, jdbcType = JdbcType.VARCHAR, typeHandler = XMLTypeHandler.class)
+        @Result(property = "EXTENDED_ATTRIBUTES", column = "EXTENDED_ATTRIBUTES", javaType = Map.class, jdbcType = JdbcType.CLOB, typeHandler = ClobXMLTypeHandler.class)
     })
-    Map<String, ?> getDisplayData(@Param("productID") String productID, @Param("version") Integer version, @Param("locale") String locale);
+    List<Map<String, ?>> getDisplayData(@Param("productID") String productID, @Param("version") Integer version, @Param("locale") String locale);
 
 }
