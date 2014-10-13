@@ -9,14 +9,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class ProductServiceImpl implements ProductService {
 
     private static final Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
+    public static final String EA_PREFIX = "ext_";
 
     @Resource
     protected ProductMapper productMapper;
@@ -35,19 +34,35 @@ public class ProductServiceImpl implements ProductService {
             final Integer version = Integer.parseInt(states.get("Deployed"));
             final List<Map<String, ?>> productDataList = productMapper.getDisplayData(foundProductID, version, aLocale);
             if (productDataList != null && !productDataList.isEmpty()) {
-                result.addAll(productDataList);
-//                if (productDataList.size() == 1) {
-//                    result.putAll(productDataList.get(0));
-//                } else {
-//                    result.put("variations", new ArrayList<Map<String, ?>>(productDataList.size() - 1));
-//                    productDataList.forEach(data -> {
-//                        if (foundProductID.equals(data.get("PRODUCT_ID"))) {
-//                            result.putAll(data);
-//                        } else {
-//                            ((List<Map<String, ?>>) result.get("variations")).add(data);
-//                        }
-//                    });
-//                }
+                productDataList.forEach(data -> {
+                    final Map<String, Object> pData = new TreeMap<>(new Comparator<String>() {
+                        @Override
+                        public int compare(String s1, String s2) {
+                            if (s1.startsWith(EA_PREFIX)) {
+                                if (s2.startsWith(EA_PREFIX)) {
+                                    return s1.compareTo(s2);
+                                } else {
+                                    return 1;
+                                }
+                            } else {
+                                if (s2.startsWith(EA_PREFIX)) {
+                                    return -1;
+                                } else {
+                                    return s1.compareTo(s2);
+                                }
+                            }
+                        }
+                    });
+                    data.forEach((k, v) -> {
+                        if ("EXTENDED_ATTRIBUTES".equalsIgnoreCase(k)) {
+                            ((Map<String, ?>) v).forEach((extK, extV) -> pData.put(EA_PREFIX + extK, extV));
+                        } else {
+                            final String key = Arrays.asList(k.split("_")).stream().map(w -> w.toLowerCase()).reduce((s, w) -> s + (s.length() == 0 ? w : w.substring(0, 1).toUpperCase() + w.substring(1).toLowerCase())).orElse("");
+                            pData.put(key, v);
+                        }
+                    });
+                    result.add(pData);
+                });
             }
         } else {
             logger.warn("No deployed version found on product: " + aProductID);

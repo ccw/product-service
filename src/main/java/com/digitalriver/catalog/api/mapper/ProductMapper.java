@@ -35,6 +35,7 @@ public interface ProductMapper {
             ")" +
             "SELECT PD.product_id, " +
             "       PD.product_data_id, " +
+            "       PD.locale, " +
             "       PD.display_name, " +
             "       NVL(PI.PARENT_PRODUCT_ID, '') BASE_PRODUCT_ID, " +
             "       (CASE WHEN PI.parent_product_id is null THEN '0' ELSE '1' END) IS_VARIATION, " +
@@ -62,5 +63,52 @@ public interface ProductMapper {
         @Result(property = "EXTENDED_ATTRIBUTES", column = "EXTENDED_ATTRIBUTES", javaType = Map.class, jdbcType = JdbcType.CLOB, typeHandler = ClobXMLTypeHandler.class)
     })
     List<Map<String, ?>> getDisplayData(@Param("productID") String productID, @Param("version") Integer version, @Param("locale") String locale);
+
+    @Select({"with base_pid as (",
+             "    select p.product_id",
+             "      from cat_product p left join cat_catalog_product c on p.product_id = c.product_id and c.catalog_id = #{catalogID}",
+             "     where c.catalog_id is not null",
+             "       and p.parent_product_id is null",
+             "),",
+             "deployed as (",
+             "    select v.product_id, ",
+             "           v.version",
+             "      from cat_product_version v",
+             "     where v.product_id in (select product_id from base_pid) and v.state_id = '53'",
+             "),",
+             "alldata as (",
+             "    select d.product_data_id,",
+             "           p.parent_product_id",
+             "      from cat_product_data d left join cat_product p on d.product_id = p.product_id,",
+             "           deployed y",
+             "     where p.product_id = y.product_id",
+             "       AND d.version = y.version",
+             "     union",
+             "    select d.product_data_id,",
+             "           p.parent_product_id",
+             "      from cat_product_data d left join cat_product p on d.product_id = p.product_id,",
+             "           deployed y",
+             "     where p.parent_product_id = y.product_id",
+             ") ",
+             "select D.product_id,",
+             "       D.product_data_id,",
+             "       D.version,",
+             "       D.locale,",
+             "       D.display_name,",
+             "       NVL(a.parent_product_id, '') BASE_PRODUCT_ID,",
+             "       (CASE WHEN a.parent_product_id is null THEN '0' ELSE '1' END) IS_VARIATION,",
+             "       D.short_description,",
+             "       TO_CHAR(D.long_description) as long_description,",
+             "       D.thumbnail,",
+             "       D.mfr_partnumber,",
+             "       D.sku,",
+             "       D.detail_image,",
+             "       D.is_viewable,",
+             "       D.is_orderable,",
+             "       D.is_reviewable,",
+             "       D.keywords,",
+             "       XMLTYPE(D.extended_attributes) as extended_attribute" +
+             "  from alldata a left join cat_product_data d on d.product_data_id = a.product_data_id;"})
+    List<Map<String, ?>> getProductDataByCatalog(@Param("catalogID") String catalogID);
 
 }
