@@ -32,7 +32,8 @@ public class ClobXMLTypeHandler extends AbstractXMLTypeHandler<String> {
 
     protected String handleBytes(final byte[] data) throws SQLException {
         final String result = data == null ? "" : new String(data);
-        return result.substring(result.indexOf("<?xml"));
+        int headerIndex = result.indexOf("<?xml");
+        return result.substring(headerIndex < 0 ? 0 : headerIndex);
     }
 
 

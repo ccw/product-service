@@ -9,4 +9,6 @@ public interface ProductService {
 
     List<Map<String, ?>> get(String productID, String locale) throws ProductException;
 
+    List<Map<String, ?>> list(String catalogID);
+
 }
