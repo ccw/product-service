@@ -9,8 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.context.embedded.ServletContextInitializer;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.data.solr.repository.config.EnableSolrRepositories;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
 import javax.servlet.DispatcherType;
@@ -22,6 +25,7 @@ import java.util.EnumSet;
 @ComponentScan
 @MapperScan("com.digitalriver.catalog.api.mapper")
 @EnableAutoConfiguration
+@EnableSolrRepositories("com.digitalriver.catalog.api.repository")
 @PropertySource({"classpath:/application.properties",
                  "classpath:/credential.properties"})
 public class Application {

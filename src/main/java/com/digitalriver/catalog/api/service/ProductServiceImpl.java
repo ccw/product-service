@@ -1,48 +1,44 @@
 package com.digitalriver.catalog.api.service;
 
+import com.digitalriver.catalog.api.domain.Product;
 import com.digitalriver.catalog.api.exception.ProductException;
-import com.digitalriver.catalog.api.exception.ProductNotDeployedException;
 import com.digitalriver.catalog.api.exception.ProductNotFoundException;
 import com.digitalriver.catalog.api.mapper.ProductMapper;
+import com.digitalriver.catalog.api.repository.ProductRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.beans.PropertyDescriptor;
 import java.util.*;
 
 @Service
 public class ProductServiceImpl implements ProductService {
 
     public static final String EA_PREFIX = "ext_";
-    public static final String STATE_DEPLOYED = "Deployed";
 
     private static final Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
 
     @Resource
     protected ProductMapper productMapper;
 
+    @Resource
+    protected ProductRepository productRepository;
+
     @Override
     @SuppressWarnings("unchecked")
-    public List<Map<String, ?>> get(String aProductID, String aLocale) throws ProductException {
-        final Map<String, ?> product = productMapper.getMetadata(aProductID);
-        if (product == null || product.isEmpty()) {
-            throw new ProductNotFoundException(aProductID);
+    public List<Product> get(String aProductID, String aLocale) throws ProductException {
+        final List<Product> results = productRepository.findByIDAndLocale(aProductID, aLocale);
+        if (results == null || results.isEmpty()) {
+            throw  new ProductNotFoundException(aProductID);
         }
-        final Map<String, String> states = (Map<String, String>) product.get("STATES");
-        if (states.containsKey(ProductServiceImpl.STATE_DEPLOYED)) {
-            final String foundProductID = (String) product.get("PRODUCT_ID");
-            final Integer version = Integer.parseInt(states.get(ProductServiceImpl.STATE_DEPLOYED));
-            final List<Map<String, ?>> productDataList = productMapper.getDisplayData(foundProductID, version, aLocale);
-            return this.refineProductDisplayData(productDataList);
-        } else {
-            logger.warn("No deployed version found on product: " + aProductID);
-            throw new ProductNotDeployedException(aProductID);
-        }
+        return results;
     }
 
     @Override
-    public List<Map<String, ?>> list(String catalogID) {
+    public List<Product> list(String catalogID) {
         final List<String> dataIDs = productMapper.getProductDataIDByCatalog(catalogID);
         if (dataIDs == null || dataIDs.isEmpty()) {
             return Collections.emptyList();
@@ -55,37 +51,39 @@ public class ProductServiceImpl implements ProductService {
                 logger.warn("Fail to load product data : [" + id + "], " + e.getMessage());
             }
         });
-        return this.refineProductDisplayData(dataList);
+        final List<Product> products = this.refineProductDisplayData(dataList);
+        productRepository.save(products);
+        return products;
     }
 
     @SuppressWarnings("unchecked")
-    protected List<Map<String, ?>> refineProductDisplayData(List<Map<String, ?>> aDataList) {
-        final List<Map<String, ?>> result = new ArrayList<>();
+    protected List<Product> refineProductDisplayData(List<Map<String, ?>> aDataList) {
+        final List<Product> result = new ArrayList<>();
         if (aDataList != null && !aDataList.isEmpty()) {
             aDataList.forEach(data -> {
-                final Map<String, Object> pData = new TreeMap<>((s1, s2) -> {
-                    if (s1.startsWith(ProductServiceImpl.EA_PREFIX)) {
-                        if (s2.startsWith(ProductServiceImpl.EA_PREFIX)) {
-                            return s1.compareTo(s2);
-                        } else {
-                            return 1;
-                        }
-                    } else {
-                        if (s2.startsWith(ProductServiceImpl.EA_PREFIX)) {
-                            return -1;
-                        } else {
-                            return s1.compareTo(s2);
-                        }
-                    }
-                });
+                final Product pData = new Product();
                 data.forEach((k, v) -> {
                     if ("EXTENDED_ATTRIBUTES".equalsIgnoreCase(k)) {
-                        ((Map<String, ?>) v).forEach((extK, extV) -> pData.put(ProductServiceImpl.EA_PREFIX + extK, extV == null ? "" : extV));
+                        pData.setExtendAttributes(new HashMap<>());
+                        ((Map<String, ?>) v).forEach((extK, extV) -> {
+                            final String valueString = (extV == null ? "" : (extV instanceof List ? ((List<String>) extV).stream().reduce((s, w) -> s.length() == 0 ? w : (s + ", " + w)).orElse("") : extV.toString()));
+                            pData.getExtendAttributes().put(ProductServiceImpl.EA_PREFIX + extK, valueString);
+                        });
                     } else {
                         final String key = Arrays.asList(k.split("_")).stream().map(w -> w.replaceAll("\\s", "").toLowerCase()).reduce((s, w) -> s + (s.length() == 0 ? w : w.substring(0, 1).toUpperCase() + w.substring(1).toLowerCase())).orElse("");
-                        pData.put(key, v == null ? "" : v);
+                        final PropertyDescriptor descriptor = BeanUtils.getPropertyDescriptor(Product.class, key);
+                        if (descriptor != null) {
+                            try {
+                                descriptor.getWriteMethod().invoke(pData, v == null ? "" : v);
+                            } catch (final Exception e) {
+                                logger.warn("Fail to assign " + key + "=" + v + " to deserialized object", e);
+                            }
+                        }
                     }
                 });
+                if (pData.getBaseProductId() == null) {
+                    pData.setBaseProductId(pData.getProductId());
+                }
                 result.add(pData);
             });
         }

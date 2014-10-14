@@ -10,8 +10,8 @@ buildscript {
     }
     repositories {
         mavenCentral()
-        maven { url "http://repo.spring.io/snapshot" }
-        maven { url "http://repo.spring.io/milestone" }
+        maven { url 'http://repo.spring.io/snapshot' }
+        maven { url 'http://repo.spring.io/milestone' }
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
         maven { url 'https://oss.sonatype.org/content/repositories/github-releases' }
     }
@@ -64,6 +64,7 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-jdbc")
     compile("org.springframework.boot:spring-boot-starter-web")
     compile("org.springframework.boot:spring-boot-starter-actuator")
+    compile("org.springframework.boot:spring-boot-starter-data-solr")
     compile("org.mybatis:mybatis:${myBatisVersion}")
     compile("org.mybatis:mybatis-spring:${myBatisSpringVersion}")
     compile("oracle:ojdbc6:${oracleJDBCDriverVersion}")

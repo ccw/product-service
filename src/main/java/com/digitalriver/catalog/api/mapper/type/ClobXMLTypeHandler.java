@@ -1,4 +1,4 @@
-package com.digitalriver.catalog.api.mapper;
+package com.digitalriver.catalog.api.mapper.type;
 
 import org.apache.ibatis.type.JdbcType;
 
@@ -8,26 +8,33 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
 
-public class VarCharXMLTypeHandler extends AbstractXMLTypeHandler<String> {
+public class ClobXMLTypeHandler extends AbstractXMLTypeHandler<String> {
 
     @Override
     public void setNonNullParameter(PreparedStatement ps, int i, Map<String, ?> parameter, JdbcType jdbcType) throws SQLException {
-        //
+
     }
 
     @Override
     public Map<String, ?> getNullableResult(ResultSet rs, String columnName) throws SQLException {
-        return this.handle(rs.getNString(columnName));
+        return this.handle(this.handleBytes(rs.getBytes(columnName)));
     }
 
     @Override
     public Map<String, ?> getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
-        return this.handle(rs.getNString(columnIndex));
+        return this.handle(this.handleBytes(rs.getBytes(columnIndex)));
     }
 
     @Override
     public Map<String, ?> getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
-        return this.handle(cs.getNString(columnIndex));
+        return this.handle(this.handleBytes(cs.getBytes(columnIndex)));
     }
+
+    protected String handleBytes(final byte[] data) throws SQLException {
+        final String result = data == null ? "" : new String(data);
+        int headerIndex = result.indexOf("<?xml");
+        return result.substring(headerIndex < 0 ? 0 : headerIndex);
+    }
+
 
 }

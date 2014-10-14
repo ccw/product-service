@@ -1,4 +1,4 @@
-package com.digitalriver.catalog.api.mapper;
+package com.digitalriver.catalog.api.mapper.type;
 
 import groovy.util.XmlSlurper;
 import groovy.util.slurpersupport.GPathResult;

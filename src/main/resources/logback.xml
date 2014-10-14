@@ -8,7 +8,10 @@
     </appender>
 
     <logger name="org.springframework" level="ERROR" />
-    <logger name="com.digitalriver" level="DEBUG" />
+    <logger name="org.apache.solr.client.solrj" level="DEBUG"/>
+    <logger name="org.springframework.data.solr.repository" level="DEBUG"/>
+    <logger name="com.digitalriver.catalog.api.mapper" level="WARN" />
+    <logger name="com.digitalriver.catalog.api.repository" level="DEBUG" />
 
     <root level="INFO">
         <appender-ref ref="STDOUT" />
