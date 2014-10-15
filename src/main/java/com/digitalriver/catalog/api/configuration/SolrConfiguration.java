@@ -20,7 +20,6 @@ public class SolrConfiguration {
     @Bean
     public SolrServer solrServer() {
         final CloudSolrServer server = new CloudSolrServer(host);
-        System.out.println("========> connecting " + host);
         server.setDefaultCollection(defaultCollection);
         return server;
     }

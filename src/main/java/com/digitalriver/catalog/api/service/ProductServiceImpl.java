@@ -2,6 +2,7 @@ package com.digitalriver.catalog.api.service;
 
 import com.digitalriver.catalog.api.domain.Product;
 import com.digitalriver.catalog.api.exception.ProductException;
+import com.digitalriver.catalog.api.exception.ProductNotDeployedException;
 import com.digitalriver.catalog.api.exception.ProductNotFoundException;
 import com.digitalriver.catalog.api.mapper.ProductMapper;
 import com.digitalriver.catalog.api.repository.ProductRepository;
@@ -38,7 +39,26 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> list(String catalogID) {
+    @SuppressWarnings("unchecked")
+    public List<Product> load(String aProductID, String aLocale) throws ProductException {
+        final Map<String, ?> product = productMapper.getMetadata(aProductID);
+        if (product == null || product.isEmpty()) {
+            throw new ProductNotFoundException(aProductID);
+        }
+        final Map<String, String> states = (Map<String, String>) product.get("STATES");
+        if (states.containsKey("Deployed")) {
+            final String foundProductID = (String) product.get("PRODUCT_ID");
+            final Integer version = Integer.parseInt(states.get("Deployed"));
+            final List<Map<String, ?>> productDataList = productMapper.getDisplayData(foundProductID, version, aLocale);
+            return this.refineProductDisplayData(productDataList);
+        } else {
+            logger.warn("No deployed version found on product: " + aProductID);
+            throw new ProductNotDeployedException(aProductID);
+        }
+    }
+
+    @Override
+    public List<Product> push(String catalogID) {
         final List<String> dataIDs = productMapper.getProductDataIDByCatalog(catalogID);
         if (dataIDs == null || dataIDs.isEmpty()) {
             return Collections.emptyList();
@@ -76,7 +96,7 @@ public class ProductServiceImpl implements ProductService {
                             try {
                                 descriptor.getWriteMethod().invoke(pData, v == null ? "" : v);
                             } catch (final Exception e) {
-                                logger.warn("Fail to assign " + key + "=" + v + " to deserialized object", e);
+                                logger.warn("Fail to assign " + key + "=" + v + " to target object", e);
                             }
                         }
                     }

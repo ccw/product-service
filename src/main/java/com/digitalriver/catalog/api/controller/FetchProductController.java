@@ -12,7 +12,7 @@ import javax.annotation.Resource;
 
 @RestController
 @RequestMapping("/pd")
-public class ProductController {
+public class FetchProductController {
 
     @Resource
     protected ProductService service;
@@ -20,6 +20,11 @@ public class ProductController {
     @RequestMapping(method = RequestMethod.GET, value = "/{locale}/{productID}", produces = "application/json")
     public String get(@PathVariable String productID, @PathVariable String locale) throws ProductException {
         return new JsonBuilder(service.get(productID, locale)).toPrettyString();
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/db/{locale}/{productID}", produces = "application/json")
+    public String load(@PathVariable String productID, @PathVariable String locale) throws ProductException {
+        return new JsonBuilder(service.load(productID, locale)).toPrettyString();
     }
 
 }

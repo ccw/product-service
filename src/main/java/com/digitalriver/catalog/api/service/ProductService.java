@@ -9,6 +9,8 @@ public interface ProductService {
 
     List<Product> get(String productID, String locale) throws ProductException;
 
-    List<Product> list(String catalogID);
+    List<Product> load(String productID, String locale) throws ProductException;
+
+    List<Product> push(String catalogID);
 
 }

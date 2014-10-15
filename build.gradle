@@ -1,12 +1,13 @@
 buildscript {
     ext {
         groovyVersion = '2.3.7'
-        springBootVersion = '1.2.0.BUILD-SNAPSHOT'
+        springBootVersion = '1.2.0.M2'
         springLoadedVersion = '1.2.0.RELEASE'
         oracleJDBCDriverVersion = '11.2.0.3'
         myBatisVersion = '3.2.7'
         myBatisSpringVersion = '1.2.2'
         spockVersion = '1.0-groovy-2.3-SNAPSHOT'
+        guavaVersion = '18.0'
     }
     repositories {
         mavenCentral()
@@ -68,6 +69,7 @@ dependencies {
     compile("org.mybatis:mybatis:${myBatisVersion}")
     compile("org.mybatis:mybatis-spring:${myBatisSpringVersion}")
     compile("oracle:ojdbc6:${oracleJDBCDriverVersion}")
+    compile("com.google.guava:guava:${guavaVersion}")
     testCompile("org.springframework.boot:spring-boot-starter-test")
     testCompile("org.spockframework:spock-core:${spockVersion}")
 }

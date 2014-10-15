@@ -26,23 +26,20 @@ public class Product {
     @Field
     private String displayName;
 
-//    @Field
-//    private String shortDescription;
+    @Field
+    private String shortDescription;
 
-//    @Field
-//    private String longDescription;
+    @Field
+    private String longDescription;
 
-//    @Field
-//    private String keywords;
+    @Field
+    private String keywords;
 
-//    @Field
-//    private String thumbnail;
+    @Field
+    private String thumbnail;
 
-//    @Field
-//    private String mfrPartNumber;
-
-//    @Field
-//    private String detailImage;
+    @Field
+    private String detailImage;
 
     @Field
     private Boolean isVariation;
@@ -101,53 +98,45 @@ public class Product {
         this.displayName = displayName;
     }
 
-//    public String getShortDescription() {
-//        return shortDescription;
-//    }
-//
-//    public void setShortDescription(String shortDescription) {
-//        this.shortDescription = shortDescription;
-//    }
-//
-//    public String getLongDescription() {
-//        return longDescription;
-//    }
+    public String getShortDescription() {
+        return shortDescription;
+    }
 
-//    public void setLongDescription(String longDescription) {
-//        this.longDescription = longDescription;
-//    }
+    public void setShortDescription(String shortDescription) {
+        this.shortDescription = shortDescription;
+    }
 
-//    public String getKeywords() {
-//        return keywords;
-//    }
-//
-//    public void setKeywords(String keywords) {
-//        this.keywords = keywords;
-//    }
+    public String getLongDescription() {
+        return longDescription;
+    }
 
-//    public String getThumbnail() {
-//        return thumbnail;
-//    }
-//
-//    public void setThumbnail(String thumbnail) {
-//        this.thumbnail = thumbnail;
-//    }
-//
-//    public String getMfrPartNumber() {
-//        return mfrPartNumber;
-//    }
-//
-//    public void setMfrPartNumber(String mfrPartNumber) {
-//        this.mfrPartNumber = mfrPartNumber;
-//    }
-//
-//    public String getDetailImage() {
-//        return detailImage;
-//    }
-//
-//    public void setDetailImage(String detailImage) {
-//        this.detailImage = detailImage;
-//    }
+    public void setLongDescription(String longDescription) {
+        this.longDescription = longDescription;
+    }
+
+    public String getKeywords() {
+        return keywords;
+    }
+
+    public void setKeywords(String keywords) {
+        this.keywords = keywords;
+    }
+
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
+    }
+
+    public String getDetailImage() {
+        return detailImage;
+    }
+
+    public void setDetailImage(String detailImage) {
+        this.detailImage = detailImage;
+    }
 
     public Boolean getIsVariation() {
         return isVariation;
