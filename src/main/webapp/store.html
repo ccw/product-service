@@ -7,8 +7,13 @@
     <link rel='stylesheet' type='text/css' href='http://fonts.googleapis.com/css?family=Open+Sans'/>
     <style>
         * { font-family: 'Open Sans', sans-serif; }
-        .ui.sizes>.item { width: 45px; min-height: 45px; text-align: center; vertical-align: middle; margin: 4px; font-size: 0.75em; }
-        .ui.sizes>.item:last-child { margin-bottom: 20px; }
+        .ui.thumbnails>.item { cursor: pointer; }
+        /*.ui.variations, .ui.sizes { margin-bottom: 20px; }*/
+        .ui.connected.variations>.row>.item { width: 40px; min-height: 30px; text-align: center; vertical-align: middle; margin: 4px; padding: 1px; font-size: 0.75em; }
+        .ui.connected.variations>.row>.item>.content { padding: 1px; }
+        .ui.connected.variations>.row>.item>.content>img { width: 35px; }
+        /*.ui.variations>.row>.item:last-child,.ui.sizes>.item:last-child { margin-bottom: 20px; }*/
+        .ui.sizes>.row>.item { width: 45px; min-height: 45px; text-align: center; vertical-align: middle; margin: 4px; font-size: 0.75em; }
         .ui.price.tags>.list_price { font-weight: 600; }
         .ui.price.tags>.base_price { text-decoration: line-through; font-size: 0.8em; color: red; }
         .description.tags { font-size: 0.8em; color: gray; margin-bottom: 20px; }
@@ -29,9 +34,20 @@
         </a>
 
         <div class="right menu">
+            <div class="ui dropdown item">
+                <i class="icon globe"></i>
+                <div class="ui black tiny label locale_holder">en_US</div>
+                <div class="menu locale_picker">
+                    <a class="item">en_US</a>
+                    <a class="item">en_GB</a>
+                    <a class="item">en_IE</a>
+                    <a class="item">ja_JP</a>
+                    <a class="item">hi_IN</a>
+                </div>
+            </div>
             <div class="item">
                 <div class="ui icon input">
-                    <input type="text" placeholder="Search...">
+                    <input type="text" placeholder="Search..." class="searcher">
                     <i class="search link icon"></i>
                 </div>
             </div>
@@ -60,86 +76,57 @@
         </div>
 
         <div class="ui grid">
+            <div class="ui active dimmer"><div class="ui large text loader">Loading</div></div>
             <div class="four wide column">
                 <div class="ui list thumbnails">
-                    <div class="item">
-                        <img class="ui image right floated" src="http://demandware.edgesuite.net/sits_pod14-adidas/dw/image/v2/aagl_prd/on/demandware.static/Sites-adidas-GB-Site/Sites-adidas-products/en_GB/v1413338617412/zoom/G96646_01_standard.jpg?sw=60&sfrm=jpg">
-                    </div>
-                    <div class="item">
-                        <img class="ui image right floated" src="http://demandware.edgesuite.net/sits_pod14-adidas/dw/image/v2/aagl_prd/on/demandware.static/Sites-adidas-GB-Site/Sites-adidas-products/en_GB/v1413338617412/zoom/G96646_02_standard.jpg?sw=60&sfrm=jpg">
-                    </div>
-                    <div class="item">
-                        <img class="ui image right floated" src="http://demandware.edgesuite.net/sits_pod14-adidas/dw/image/v2/aagl_prd/on/demandware.static/Sites-adidas-GB-Site/Sites-adidas-products/en_GB/v1413338617412/zoom/G96646_03_standard.jpg?sw=60&sfrm=jpg">
-                    </div>
-                    <div class="item">
-                        <img class="ui image right floated" src="http://demandware.edgesuite.net/sits_pod14-adidas/dw/image/v2/aagl_prd/on/demandware.static/Sites-adidas-GB-Site/Sites-adidas-products/en_GB/v1413338617412/zoom/G96646_04_standard.jpg?sw=60&sfrm=jpg">
-                    </div>
-                    <div class="item">
-                        <img class="ui image right floated" src="http://demandware.edgesuite.net/sits_pod14-adidas/dw/image/v2/aagl_prd/on/demandware.static/Sites-adidas-GB-Site/Sites-adidas-products/en_GB/v1413338617412/zoom/G96646_05_standard.jpg?sw=60&sfrm=jpg">
-                    </div>
-                    <div class="item">
-                        <img class="ui image right floated" src="http://demandware.edgesuite.net/sits_pod14-adidas/dw/image/v2/aagl_prd/on/demandware.static/Sites-adidas-GB-Site/Sites-adidas-products/en_GB/v1413338617412/zoom/G96646_41_detail.jpg?sw=60&sfrm=jpg">
-                    </div>
+
                 </div>
             </div>
             <div class="seven wide column">
-                <div class="ui image">
+                <h3 class="ui black header">
+                </h3>
+                <div class="ui price tags">
+                    <span class="list_price"></span>
+                    <span class="base_price"></span>
+                </div>
+                <div class="ui image pdp">
                     <a class="ui left red corner label">
-                        <div class="text">-50%</div>
+                        <div class="text">NEW</div>
                     </a>
-                    <img src="http://demandware.edgesuite.net/sits_pod14-adidas/dw/image/v2/aagl_prd/on/demandware.static/Sites-adidas-GB-Site/Sites-adidas-products/en_GB/v1413338617412/zoom/G96646_01_standard.jpg?sw=500&sfrm=jpg"/>
+                    <img src=""/>
+                </div>
+                <div >
+                    <div class="description tags">
+                    </div>
+                    <div class="ui small stars">
+                        <i class="icon star"></i>
+                        <i class="icon star"></i>
+                        <i class="icon star"></i>
+                        <i class="icon empty star"></i>
+                        <i class="icon empty star"></i>
+                    </div>
                 </div>
             </div>
             <div class="five wide column">
                 <div class="ui basic segment">
-                    <div >
-                        <div class="ui rating large stars">
-                            <i class="icon star"></i>
-                            <i class="icon star"></i>
-                            <i class="icon star"></i>
-                            <i class="icon empty star"></i>
-                            <i class="icon empty star"></i>
-                        </div>
-                            <div class="ui small teal label">
-                                <a class="detail"><i class="comment icon"></i> Read 1 review</a>
-                            </div>
-                    </div>
-                    <h3 class="ui black header">
-                        <div class="sub header">Men Originals</div>
-                        VESPA LX LO
-                    </h3>
-                    <div class="ui price tags">
-                        <span class="list_price">£31</span>
-                        <span class="base_price">£62</span>
-                    </div>
                     <div class="ui form">
-                        <div class="description tags">
-                            Color White / Black / Pool (G96646)
+                        <div class="fields">
+                            <div class="fifteen wide field">
+                                <div class="ui connected items variations">
+                                </div>
+                            </div>
                         </div>
                         <div class="fields">
-                            <div class="fourteen wide field">
-                                <div class="ui stackable items sizes">
-                                    <div class="item"><div class="content">6</div></div>
-                                    <div class="item"><div class="content">6.5</div></div>
-                                    <div class="item"><div class="content">7</div></div>
-                                    <div class="item"><div class="content">7.5</div></div>
-                                    <div class="item"><div class="content">8</div></div>
-                                    <div class="item"><div class="content">8.5</div></div>
-                                    <div class="item"><div class="content">9</div></div>
-                                    <div class="item"><div class="content">9.5</div></div>
-                                    <div class="item"><div class="content">10</div></div>
-                                    <div class="item"><div class="content">10.5</div></div>
-                                    <div class="item"><div class="content">11</div></div>
-                                    <div class="item"><div class="content">11.5</div></div>
-                                    <div class="item"><div class="content">12</div></div>
-                                    <div class="item"><div class="content">12.5</div></div>
-                                    <div class="item"><div class="content">13</div></div>
-                                    <div class="item"><div class="content">13.5</div></div>
-                                    <div class="item"><div class="content">14</div></div>
-                                    <div class="item"><div class="content">14.5</div></div>
-                                    <div class="item"><div class="content">15</div></div>
-                                    <div class="item"><div class="content">15.5</div></div>
-                                    <div class="item"><div class="content">16</div></div>
+                            <div class="fifteen wide field">
+                                <div class="ui connected items sizes">
+                                    <div class="row">
+                                        <div class="item"><div class="content">SM</div></div>
+                                        <div class="item"><div class="content">MD</div></div>
+                                        <div class="item"><div class="content">LG</div></div>
+                                        <div class="item"><div class="content">XL</div></div>
+                                        <div class="item"><div class="content">XXL</div></div>
+                                        <div class="item"><div class="content">3XL</div></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -180,15 +167,106 @@
 <script type="application/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.7.0/underscore.js"></script>
 <script type="application/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.js"></script>
 <script type="application/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/0.16.1/javascript/semantic.js"></script>
-<script type="application/javascript" src="js/data.js"></script>
 <script type="application/javascript">
     $(document).ready(function() {
         $('.ui.dropdown').dropdown();
+        $('.menu.locale_picker>.item').on('click', function(){
+            $('.locale_holder').text($(this).text());
+        });
 
-//        _.each(_.sortBy(_.filter(_.keys(data[0].extendAttributes), function(name) { return /ext_PDPThumbnailImage/.test(name); })), function(imgKey) {
-//            $('.ui.thumbnails').append($('<div></div>').addClass('item').append($('<img/>').addClass('ui image right floated').attr('src', data[0].extendAttributes[imgKey])));
-//        });
+        $('.searcher').on('keypress', function(e) {
+            if (e.which == 13) {
+                $('.ui.grid>.ui.dimmer').addClass('active');
+                searchProduct($(this).val());
+            }
+        });
+
+        searchProduct('underarmour_0000');
     });
+
+    function searchProduct(pid) {
+        $.ajax({
+            type: "GET",
+            url: 'http://localhost:8080/pd/' + $('.locale_holder').text() + '/' + pid,
+            statusCode : {
+                404: function() {
+                    $('.ui.grid>.ui.dimmer').removeClass('active');
+                }
+            }
+        }).done(function(products) {
+            if (products && products.length > 0) {
+                data = products;
+                showProduct();
+            } else {
+                $('.ui.grid>.ui.dimmer').removeClass('active');
+            }
+        });
+    }
+
+    function showProduct() {
+        $('.ui.breadcrumb').html('');
+        $('.ui.breadcrumb')
+                .append($('<a/>').addClass('section').append($('<i/>').addClass('circle left icon')).append(' Back')).append($('<div/>').addClass('divider').text('｜'))
+                .append($('<a/>').addClass('section').append('Home')).append($('<div/>').addClass('divider').text(' /'));
+
+        _.each(data[0].extendAttributes['ext_msCategory'].split(','), function(cat, index, list) {
+            $('.ui.breadcrumb').append($('<a/>').addClass('section').append(cat)).append($('<div/>').addClass('divider').text(' /'));
+        });
+
+        $('.ui.breadcrumb').append($('<a/>').addClass('action section').append(data[0].displayName));
+
+        $('.ui.variations').html('');
+        var row;
+        _.each(data, function(pd, index, all) {
+            var content = $('<div></div>').addClass('content').addClass('content').on('click', function(e) {
+                displayProduct(index);
+            });
+            if (index % 7 == 0) {
+                row = $('<div/>').addClass('row');
+                $('.ui.variations').append(row);
+            }
+            row.append(
+                $('<div></div>').addClass('item').append(content)
+            );
+            if (pd.extendAttributes['ext_msThumbnail']) {
+                content.html($('<img>').attr('src', pd.extendAttributes['ext_msThumbnail']));
+            } else {
+                content.text(pd.extendAttributes['ext_msPDPVariationLabelOverride'] ? pd.extendAttributes['ext_msPDPVariationLabelOverride'] : 'Undefined');
+            }
+
+        });
+
+        displayProduct(0);
+        $('.ui.grid>.ui.dimmer').removeClass('active');
+    }
+
+    function displayProduct(index) {
+        var pd = data[index];
+        var attrs = pd.extendAttributes;
+
+        $('h3.ui.header').html($('<span></span>').text(pd.displayName).append($('<div></div>').addClass('sub header').text(attrs['ext_msPDPShortDescription'])));
+
+        $('.description.tags').text(pd['sku']);
+        $('.ui.price>.base_price').text(attrs['ext_msMSRP']);
+        $('.ui.price>.list_price').text(attrs['ext_msListPrice']);
+
+        $('.ui.thumbnails').html('');
+        _.each(_.sortBy(_.filter(_.keys(attrs), function(name) { return /ext_PDPThumbnailImage/.test(name); })), function(imgKey) {
+            var pindx = imgKey.substr('ext_PDPThumbnailImage'.length);
+            $('.ui.thumbnails').append(
+                    $('<div></div>').addClass('item').append(
+                            $('<img/>').addClass('ui image right floated').attr('src', attrs[imgKey]))
+                            .on('click', function(e) {
+                                enlargePicture(index, pindx);
+                            }));
+        });
+
+        enlargePicture(index, 1);
+    }
+
+    function enlargePicture(dataIndex, picIndex) {
+        $('.ui.pdp>img').attr('src', data[dataIndex].extendAttributes['ext_PDPImageLarge' + picIndex]);
+    }
 </script>
 </body>
 </html>
