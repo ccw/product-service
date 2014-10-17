@@ -13,10 +13,12 @@
         .ui.connected.variations>.row>.item>.content { padding: 1px; }
         .ui.connected.variations>.row>.item>.content>img { width: 35px; }
         /*.ui.variations>.row>.item:last-child,.ui.sizes>.item:last-child { margin-bottom: 20px; }*/
-        .ui.sizes>.row>.item { width: 45px; min-height: 45px; text-align: center; vertical-align: middle; margin: 4px; font-size: 0.75em; }
+        .ui.connected.sizes>.row>.item { width: 45px; min-height: 45px; text-align: center; vertical-align: middle; margin: 4px; font-size: 0.75em; }
         .ui.price.tags>.list_price { font-weight: 600; }
         .ui.price.tags>.base_price { text-decoration: line-through; font-size: 0.8em; color: red; }
         .description.tags { font-size: 0.8em; color: gray; margin-bottom: 20px; }
+        .ui.basic.segment.main { margin-left: auto; margin-right: auto; }
+        .ui.body { width: 1280px; margin-left: auto; margin-right:auto; }
     </style>
     <title>:: the store ::</title>
 </head>
@@ -75,35 +77,37 @@
             <div class="active section">VESPA LX LO</div>
         </div>
 
-        <div class="ui grid">
+        <div class="ui grid body">
             <div class="ui active dimmer"><div class="ui large text loader">Loading</div></div>
-            <div class="four wide column">
+            <div class="three wide column">
                 <div class="ui list thumbnails">
 
                 </div>
             </div>
             <div class="seven wide column">
-                <h3 class="ui black header">
-                </h3>
-                <div class="ui price tags">
-                    <span class="list_price"></span>
-                    <span class="base_price"></span>
-                </div>
-                <div class="ui image pdp">
-                    <a class="ui left red corner label">
-                        <div class="text">NEW</div>
-                    </a>
-                    <img src=""/>
-                </div>
-                <div >
-                    <div class="description tags">
+                <div class="ui segment basic main">
+                    <h3 class="ui black header">
+                    </h3>
+                    <div class="ui price tags">
+                        <span class="list_price"></span>
+                        <span class="base_price"></span>
                     </div>
-                    <div class="ui small stars">
-                        <i class="icon star"></i>
-                        <i class="icon star"></i>
-                        <i class="icon star"></i>
-                        <i class="icon empty star"></i>
-                        <i class="icon empty star"></i>
+                    <div class="ui image pdp">
+                        <a class="ui left red corner label">
+                            <div class="text">NEW</div>
+                        </a>
+                        <img src=""/>
+                    </div>
+                    <div >
+                        <div class="description tags">
+                        </div>
+                        <div class="ui small stars">
+                            <i class="icon star"></i>
+                            <i class="icon star"></i>
+                            <i class="icon star"></i>
+                            <i class="icon empty star"></i>
+                            <i class="icon empty star"></i>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -116,7 +120,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="fields">
+                        <div class="fields sizes">
                             <div class="fifteen wide field">
                                 <div class="ui connected items sizes">
                                     <div class="row">
@@ -131,7 +135,7 @@
                             </div>
                         </div>
                         <div class="fields">
-                            <div class="five wide field">
+                            <div class="ten wide field">
                                 <div class="ui fluid selection tiny dropdown">
                                     <input type="hidden" name="qty">
                                     <div class="default text">Qty</div>
@@ -149,6 +153,8 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <div class="fields">
                             <div class="ten wide field">
                                 <div class="ui fluid facebook submit button medium">
                                     <span style="font-size: 0.8rem;">ADD TO CART</span> <i class="cart outline icon"></i>
@@ -168,6 +174,11 @@
 <script type="application/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.js"></script>
 <script type="application/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/0.16.1/javascript/semantic.js"></script>
 <script type="application/javascript">
+    var term;
+    var data;
+
+    var default_pid = 'underarmour_0000';
+
     $(document).ready(function() {
         $('.ui.dropdown').dropdown();
         $('.menu.locale_picker>.item').on('click', function(){
@@ -181,10 +192,11 @@
             }
         });
 
-        searchProduct('underarmour_0000');
+        searchProduct(default_pid);
     });
 
     function searchProduct(pid) {
+        term = pid;
         $.ajax({
             type: "GET",
             url: 'http://localhost:8080/pd/' + $('.locale_holder').text() + '/' + pid,
@@ -209,7 +221,15 @@
                 .append($('<a/>').addClass('section').append($('<i/>').addClass('circle left icon')).append(' Back')).append($('<div/>').addClass('divider').text('｜'))
                 .append($('<a/>').addClass('section').append('Home')).append($('<div/>').addClass('divider').text(' /'));
 
-        _.each(data[0].extendAttributes['ext_msCategory'].split(','), function(cat, index, list) {
+        var bmfStore = (term === default_pid);
+        if (!bmfStore) {
+            $('.fields.sizes').hide();
+        } else {
+            $('.fields.sizes').show();
+        }
+
+        var categories = bmfStore ? data[0].extendAttributes['ext_msCategory'] : 'Somewhere,Over,The Rainbow';
+        _.each(categories.split(','), function(cat, index, list) {
             $('.ui.breadcrumb').append($('<a/>').addClass('section').append(cat)).append($('<div/>').addClass('divider').text(' /'));
         });
 
@@ -228,10 +248,10 @@
             row.append(
                 $('<div></div>').addClass('item').append(content)
             );
-            if (pd.extendAttributes['ext_msThumbnail']) {
+            if (bmfStore) {
                 content.html($('<img>').attr('src', pd.extendAttributes['ext_msThumbnail']));
             } else {
-                content.text(pd.extendAttributes['ext_msPDPVariationLabelOverride'] ? pd.extendAttributes['ext_msPDPVariationLabelOverride'] : 'Undefined');
+                content.text(pd.extendAttributes['ext_msPDPVariationLabelOverride'] ? pd.extendAttributes['ext_msPDPVariationLabelOverride'] : 'BASE');
             }
 
         });
