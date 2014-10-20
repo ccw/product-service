@@ -36,6 +36,11 @@
         </a>
         <div class="ui dropdown item">
             Goodies
+            <div class="menu product_picker">
+                <a class="item" data-pid="289171900" data-locale="en_US" data-category="Goodies,Gaming">Xbox Gift Card</a>
+                <a class="item" data-pid="275670200" data-locale="en_US" data-category="Goodies,Gaming">Rock Candy Xbox 360 Controller</a>
+                <a class="item" data-pid="275244100" data-locale="ja_JP" data-category="Goodies,Computer">Wireless Mobile Mouse 3500</a>
+            </div>
         </div>
 
         <div class="right menu">
@@ -72,6 +77,12 @@
             <a class="section"><i class="circle left icon"></i> Back</a>
             <div class="divider">  &#124;</div>
             <a class="section">Home</a>
+            <div class="divider"> /</div>
+            <a class="section">Men</a>
+            <div class="divider"> /</div>
+            <a class="section">Shoes</a>
+            <div class="divider"> /</div>
+            <div class="active section">VESPA LX LO</div>
         </div>
 
         <div class="ui grid body">
@@ -117,20 +128,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="fields sizes">
-                            <div class="fifteen wide field">
-                                <div class="ui connected items sizes">
-                                    <div class="row">
-                                        <div class="item"><div class="content">SM</div></div>
-                                        <div class="item"><div class="content">MD</div></div>
-                                        <div class="item"><div class="content">LG</div></div>
-                                        <div class="item"><div class="content">XL</div></div>
-                                        <div class="item"><div class="content">XXL</div></div>
-                                        <div class="item"><div class="content">3XL</div></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                         <div class="fields">
                             <div class="ten wide field">
                                 <div class="ui fluid selection tiny dropdown">
@@ -170,12 +167,11 @@
 <script type="application/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.7.0/underscore.js"></script>
 <script type="application/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.js"></script>
 <script type="application/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/0.16.1/javascript/semantic.js"></script>
-<script type="application/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.4.13/d3.js"></script>
 <script type="application/javascript">
     var data;
-    var grouped;
-    var thumbnails;
-    var default_pid = 'underarmour_0000';
+
+    var default_pid = '275670200';
+    var default_category = 'Goodies,Gaming';
 
     $(document).ready(function() {
         $('.ui.dropdown').dropdown();
@@ -185,6 +181,7 @@
         $('.menu.product_picker>.item').on('click', function() {
             var pid = $(this).attr('data-pid');
             var locale = $(this).attr('data-locale');
+            default_category = $(this).attr('data-category');
             $('.locale_holder').text(locale);
             searchProduct(pid);
         });
@@ -199,21 +196,6 @@
         searchProduct(default_pid);
     });
 
-    function prepareSample(sample) {
-        return _.map(sample, function(prd) {
-            prd.extendAttributes = _.reduce(prd, function(map, val, attr) { if (/ext_/.test(attr)) map[attr] = val;  return map; }, {});
-            return prd;
-        });
-    }
-
-    function prepareVariations() {
-        thumbnails = _.groupBy(data, function(p) { return p.displayName + ':' + p.extendAttributes['ext_msPDPShortDescription'] + ':' + p.extendAttributes['ext_msPDPVariationLabelOverride']; });
-        grouped = d3.nest()
-                    .key(function(p) { return p.displayName + ':' + p.extendAttributes['ext_msPDPShortDescription'] + ':' + p.extendAttributes['ext_msPDPVariationLabelOverride']; })
-                    .key(function(p) { return p.extendAttributes['ext_msSize']; })
-                    .entries(data);
-    }
-
     function searchProduct(pid) {
         $.ajax({
             type: "GET",
@@ -226,7 +208,6 @@
         }).done(function(products) {
             if (products && products.length > 0) {
                 data = products;
-                prepareVariations();
                 showProduct();
             } else {
                 $('.ui.grid>.ui.dimmer').removeClass('active');
@@ -240,9 +221,7 @@
                 .append($('<a/>').addClass('section').append($('<i/>').addClass('circle left icon')).append(' Back')).append($('<div/>').addClass('divider').text('｜'))
                 .append($('<a/>').addClass('section').append('Home')).append($('<div/>').addClass('divider').text(' /'));
 
-        $('.fields.sizes').show();
-
-        var categories = data[0].extendAttributes['ext_msCategory'];
+        var categories = default_category;
         _.each(categories.split(','), function(cat, index, list) {
             $('.ui.breadcrumb').append($('<a/>').addClass('section').append(cat)).append($('<div/>').addClass('divider').text(' /'));
         });
@@ -251,9 +230,9 @@
 
         $('.ui.variations').html('');
         var row;
-        _.each(grouped, function(pd, index, all) {
+        _.each(data, function(pd, index, all) {
             var content = $('<div></div>').addClass('content').addClass('content').on('click', function(e) {
-                displayVariation(index);
+                displayProduct(index);
             });
             if (index % 7 == 0) {
                 row = $('<div/>').addClass('row');
@@ -262,39 +241,18 @@
             row.append(
                 $('<div></div>').addClass('item').append(content)
             );
-            content.html($('<img>').attr('src', thumbnails[pd.key][0].extendAttributes['ext_msThumbnail'] ));
+            var label = pd.extendAttributes['ext_msVarLabelOverride'];
+            var pLabel = pd.extendAttributes['ext_msPDPVariationLabelOverride'];
+            content.text(label ? label : (pLabel ? pLabel : 'BASE'));
 
         });
 
-        displayVariation(0);
+        displayProduct(0);
         $('.ui.grid>.ui.dimmer').removeClass('active');
     }
 
-    function displayVariation(vIdx) {
-        var variation = grouped[vIdx];
-
-        $('.ui.sizes').html('');
-        var row;
-        _.each(variation.values, function(pd, sIdx, all) {
-            var content = $('<div></div>').addClass('content').addClass('content').on('click', function(e) {
-                displayProduct(vIdx, sIdx);
-            });
-            if (sIdx % 7 == 0) {
-                row = $('<div/>').addClass('row');
-                $('.ui.sizes').append(row);
-            }
-            row.append(
-                $('<div></div>').addClass('item').append(content)
-            );
-            content.html($('<span>' + pd.key + '</span>'));
-
-        });
-
-        displayProduct(vIdx, 0);
-    }
-
-    function displayProduct(vIdx, sIdx) {
-        var pd = grouped[vIdx].values[sIdx].values[0];
+    function displayProduct(index) {
+        var pd = data[index];
         var attrs = pd.extendAttributes;
 
         $('h3.ui.header').html($('<span></span>').text(pd.displayName).append($('<div></div>').addClass('sub header').append($('<span>' + attrs['ext_msPDPShortDescription'] +  '</span>'))));
@@ -310,15 +268,16 @@
                     $('<div></div>').addClass('item').append(
                             $('<img/>').addClass('ui image right floated').attr('src', attrs[imgKey]))
                             .on('click', function(e) {
-                                $('.ui.pdp>img').attr('src', attrs['ext_PDPImageLarge' + pindx]);
-                                $('.ui.pdp>.ui.label>div.text').text(attrs['ext_msSize']);
+                                enlargePicture(index, pindx);
                             }));
         });
 
-        $('.ui.pdp>img').attr('src', attrs['ext_PDPImageLarge' + 1]);
-        $('.ui.pdp>.ui.label>div.text').text(attrs['ext_msSize']);
+        enlargePicture(index, 1);
     }
 
+    function enlargePicture(dataIndex, picIndex) {
+        $('.ui.pdp>img').attr('src', data[dataIndex].extendAttributes['ext_PDPImageLarge' + picIndex]);
+    }
 </script>
 </body>
 </html>
