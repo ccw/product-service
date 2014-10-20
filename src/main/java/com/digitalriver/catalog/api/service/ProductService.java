@@ -11,6 +11,8 @@ public interface ProductService {
 
     List<Product> load(String productID, String locale) throws ProductException;
 
-    List<Product> push(String catalogID);
+    List<Product> pushCatalog(String catalogID);
+
+    List<Product> pushProduct(String productID);
 
 }

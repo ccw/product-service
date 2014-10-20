@@ -22,9 +22,18 @@ public class UpdateSolrController {
     @Resource
     protected ProductService service;
 
-    @RequestMapping(method = RequestMethod.POST, value = "/{catalogID}", produces = "application/json")
-    public String push(@PathVariable String catalogID) throws ProductException {
-        final List<Product> updatedProducts = service.push(catalogID);
+    @RequestMapping(method = RequestMethod.POST, value = "/cat/{catalogID}", produces = "application/json")
+    public String pushCatalog(@PathVariable String catalogID) throws ProductException {
+        final List<Product> updatedProducts = service.pushCatalog(catalogID);
+        return new JsonBuilder(ImmutableMap.of(
+            "updatedRecordSize", updatedProducts.size(),
+            "updatedProductIds", updatedProducts.stream().map(Product::getProductId).collect(Collectors.toCollection(ArrayList<String>::new))
+        )).toPrettyString();
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/prd/{productID}", produces = "application/json")
+    public String pushProduct(@PathVariable String productID) throws ProductException {
+        final List<Product> updatedProducts = service.pushProduct(productID);
         return new JsonBuilder(ImmutableMap.of(
             "updatedRecordSize", updatedProducts.size(),
             "updatedProductIds", updatedProducts.stream().map(Product::getProductId).collect(Collectors.toCollection(ArrayList<String>::new))

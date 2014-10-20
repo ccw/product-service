@@ -13,4 +13,7 @@ public interface ProductRepository extends SolrCrudRepository<Product, String> {
     @Query(value = "productId:?0 OR baseProductId:?0", filters = {"locale:?1"})
     List<Product> findByIDAndLocale(String aID, String aLocale);
 
+    @Query(value = "baseProductId:?0")
+    List<Product> findAllByBaseID(String aID);
+
 }

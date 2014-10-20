@@ -58,7 +58,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> push(String catalogID) {
+    public List<Product> pushCatalog(String catalogID) {
         final List<String> dataIDs = productMapper.getProductDataIDByCatalog(catalogID);
         if (dataIDs == null || dataIDs.isEmpty()) {
             return Collections.emptyList();
@@ -74,6 +74,29 @@ public class ProductServiceImpl implements ProductService {
         final List<Product> products = this.refineProductDisplayData(dataList);
         productRepository.save(products);
         return products;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<Product> pushProduct(final String aProductID) {
+        final Map<String, ?> product = productMapper.getMetadata(aProductID);
+        if (product == null || product.isEmpty()) {
+            return Collections.emptyList();
+        }
+        final Map<String, String> states = (Map<String, String>) product.get("STATES");
+        if (states.containsKey("Deployed")) {
+            final String foundProductID = (String) product.get("PRODUCT_ID");
+            final List<Product> existProducts = productRepository.findAllByBaseID(foundProductID);
+            productRepository.delete(existProducts);
+            final Integer version = Integer.parseInt(states.get("Deployed"));
+            final List<Map<String, ?>> dataList = productMapper.getAllLocaleDisplayData(foundProductID, version);
+            final List<Product> products = this.refineProductDisplayData(dataList);
+            productRepository.save(products);
+            return products;
+        } else {
+            logger.warn("No deployed version found on product: " + aProductID);
+            return Collections.emptyList();
+        }
     }
 
     @SuppressWarnings("unchecked")

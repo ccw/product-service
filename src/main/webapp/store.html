@@ -28,12 +28,23 @@
         <a class="item">
             <i class="home icon"></i> Home
         </a>
-        <a class="item">
+        <div class="ui dropdown item">
             Men
-        </a>
+            <div class="menu product_picker">
+                <a class="item" data-pid="underarmour_0000" data-locale="en_US">Long Sleeve</a>
+            </div>
+        </div>
         <a class="item">
             Women
         </a>
+        <div class="ui dropdown item">
+            Goodies
+            <div class="menu product_picker">
+                <a class="item" data-pid="289171900" data-locale="en_US">Xbox Gift Card</a>
+                <a class="item" data-pid="275670200" data-locale="en_US">Rock Candy Xbox 360 Controller</a>
+                <a class="item" data-pid="275244100" data-locale="ja_JP">Wireless Mobile Mouse 3500</a>
+            </div>
+        </div>
 
         <div class="right menu">
             <div class="ui dropdown item">
@@ -181,8 +192,14 @@
 
     $(document).ready(function() {
         $('.ui.dropdown').dropdown();
-        $('.menu.locale_picker>.item').on('click', function(){
+        $('.menu.locale_picker>.item').on('click', function() {
             $('.locale_holder').text($(this).text());
+        });
+        $('.menu.product_picker>.item').on('click', function() {
+            var pid = $(this).attr('data-pid');
+            var locale = $(this).attr('data-locale');
+            $('.locale_holder').text(locale);
+            searchProduct(pid);
         });
 
         $('.searcher').on('keypress', function(e) {
@@ -228,7 +245,7 @@
             $('.fields.sizes').show();
         }
 
-        var categories = bmfStore ? data[0].extendAttributes['ext_msCategory'] : 'Somewhere,Over,The Rainbow';
+        var categories = bmfStore ? data[0].extendAttributes['ext_msCategory'] : 'Somewhere,Over,The,Rainbow';
         _.each(categories.split(','), function(cat, index, list) {
             $('.ui.breadcrumb').append($('<a/>').addClass('section').append(cat)).append($('<div/>').addClass('divider').text(' /'));
         });
@@ -251,7 +268,9 @@
             if (bmfStore) {
                 content.html($('<img>').attr('src', pd.extendAttributes['ext_msThumbnail']));
             } else {
-                content.text(pd.extendAttributes['ext_msPDPVariationLabelOverride'] ? pd.extendAttributes['ext_msPDPVariationLabelOverride'] : 'BASE');
+                var label = pd.extendAttributes['ext_msVarLabelOverride'];
+                var pLabel = pd.extendAttributes['ext_msPDPVariationLabelOverride'];
+                content.text(label ? label : (pLabel ? pLabel : 'BASE'));
             }
 
         });
@@ -264,7 +283,7 @@
         var pd = data[index];
         var attrs = pd.extendAttributes;
 
-        $('h3.ui.header').html($('<span></span>').text(pd.displayName).append($('<div></div>').addClass('sub header').text(attrs['ext_msPDPShortDescription'])));
+        $('h3.ui.header').html($('<span></span>').text(pd.displayName).append($('<div></div>').addClass('sub header').append($('<span>' + attrs['ext_msPDPShortDescription'] +  '</span>'))));
 
         $('.description.tags').text(pd['sku']);
         $('.ui.price>.base_price').text(attrs['ext_msMSRP']);
