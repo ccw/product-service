@@ -28,7 +28,7 @@
         <a class="item">
             <i class="home icon"></i> Home
         </a>
-        <div class="ui dropdown item">
+        <div class="ui dropdown item men">
             Men
         </div>
         <a class="item">
@@ -101,9 +101,9 @@
                         <span class="base_price"></span>
                     </div>
                     <div class="ui image pdp">
-                        <a class="ui left red corner label">
-                            <div class="text">NEW</div>
-                        </a>
+                        <!--<a class="ui left red corner label">-->
+                            <!--<div class="text">NEW</div>-->
+                        <!--</a>-->
                         <img src=""/>
                     </div>
                     <div >
@@ -184,6 +184,9 @@
             default_category = $(this).attr('data-category');
             $('.locale_holder').text(locale);
             searchProduct(pid);
+        });
+        $('.ui.men').on('click', function() {
+            window.location.href = 'store.html';
         });
 
         $('.searcher').on('keypress', function(e) {
