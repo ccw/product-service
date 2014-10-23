@@ -13,13 +13,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.data.solr.repository.config.EnableSolrRepositories;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
 @Configuration
 @ComponentScan
 @EnableAutoConfiguration
-@EnableSolrRepositories("com.digitalriver.catalog.api.repository")
 @PropertySource({"classpath:/application.properties"})
 public class StoreServiceApp {
 
