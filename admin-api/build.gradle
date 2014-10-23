@@ -1,0 +1,5 @@
+mainClassName = 'com.digitalriver.catalog.api.AdminServiceApp'
+
+jar {
+    baseName = 'product-admin-service'
+}

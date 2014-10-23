@@ -1,0 +1,19 @@
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{24} - %msg%n%rEx</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="org.springframework" level="ERROR" />
+    <logger name="org.apache.solr.client.solrj" level="DEBUG"/>
+    <logger name="org.springframework.data.solr.repository" level="DEBUG"/>
+    <logger name="com.digitalriver.catalog.api.mapper" level="WARN" />
+    <logger name="com.digitalriver.catalog.api.repository" level="DEBUG" />
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT" />
+    </root>
+</configuration>

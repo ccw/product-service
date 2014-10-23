@@ -1,0 +1,5 @@
+mainClassName = 'com.digitalriver.catalog.api.StoreServiceApp'
+
+jar {
+    baseName = 'product-service-sample'
+}

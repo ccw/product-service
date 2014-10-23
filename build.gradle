@@ -2,7 +2,8 @@ buildscript {
     ext {
         groovyVersion = '2.3.7'
         springBootVersion = '1.2.0.M2'
-        springLoadedVersion = '1.2.0.RELEASE'
+        springLoadedVersion = '1.2.1.RELEASE'
+        springDataSolrVersion = '1.4.0.BUILD-SNAPSHOT'
         oracleJDBCDriverVersion = '11.2.0.3'
         myBatisVersion = '3.2.7'
         myBatisSpringVersion = '1.2.2'
@@ -22,19 +23,7 @@ buildscript {
     }
 }
 
-apply plugin: 'java'
-apply plugin: 'groovy'
 apply plugin: 'idea'
-apply plugin: 'spring-boot'
-
-mainClassName = 'com.digitalriver.catalog.api.Application'
-
-jar {
-    baseName = 'product-service'
-    version = '0.0.1-SNAPSHOT'
-}
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
 
 idea {
     module {
@@ -51,29 +40,67 @@ configurations.all {
     }
 }
 
-repositories {
-    mavenCentral()
-    maven { url "http://repo.spring.io/snapshot" }
-    maven { url "http://repo.spring.io/milestone" }
-    maven { url "http://gcartifacts.digitalriver.com/nexus/content/repositories/Internal1/" }
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'groovy'
+    version = '0.0.1-SNAPSHOT'
 
-}
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
 
-dependencies {
-    compile("org.codehaus.groovy:groovy-all:${groovyVersion}")
-    compile("org.springframework.boot:spring-boot-starter-aop")
-    compile("org.springframework.boot:spring-boot-starter-jdbc")
-    compile("org.springframework.boot:spring-boot-starter-web")
-    compile("org.springframework.boot:spring-boot-starter-actuator")
-    compile("org.springframework.boot:spring-boot-starter-data-solr")
-    compile("org.mybatis:mybatis:${myBatisVersion}")
-    compile("org.mybatis:mybatis-spring:${myBatisSpringVersion}")
-    compile("oracle:ojdbc6:${oracleJDBCDriverVersion}")
-    compile("com.google.guava:guava:${guavaVersion}")
-    testCompile("org.springframework.boot:spring-boot-starter-test")
-    testCompile("org.spockframework:spock-core:${spockVersion}")
+    repositories {
+        mavenCentral()
+        maven { url "http://repo.spring.io/snapshot" }
+        maven { url "http://repo.spring.io/milestone" }
+        maven { url "http://gcartifacts.digitalriver.com/nexus/content/repositories/Internal1/" }
+    }
+
+    dependencies {
+        compile("org.codehaus.groovy:groovy-all:${groovyVersion}")
+        compile("com.google.guava:guava:${guavaVersion}")
+        testCompile("org.springframework.boot:spring-boot-starter-test")
+        testCompile("org.spockframework:spock-core:${spockVersion}")
+    }
 }
 
 task wrapper(type: Wrapper) {
     gradleVersion = '1.12'
+}
+
+project(':solr-client') {
+    dependencies {
+        compile("org.springframework.data:spring-data-solr:${springDataSolrVersion}")
+    }
+}
+
+project(':admin-api') {
+    apply plugin: 'spring-boot'
+
+    dependencies {
+        compile project(':solr-client')
+        compile("org.springframework.boot:spring-boot-starter-web")
+        compile("org.springframework.boot:spring-boot-starter-actuator")
+        compile("org.springframework.boot:spring-boot-starter-jdbc")
+        compile("org.mybatis:mybatis:${myBatisVersion}")
+        compile("org.mybatis:mybatis-spring:${myBatisSpringVersion}")
+        compile("oracle:ojdbc6:${oracleJDBCDriverVersion}")
+    }
+}
+
+project(':store-api') {
+    apply plugin: 'spring-boot'
+
+    dependencies {
+        compile project(':solr-client')
+        compile("org.springframework.boot:spring-boot-starter-web")
+        compile("org.springframework.boot:spring-boot-starter-actuator")
+    }
+}
+
+project(':sample-site') {
+    apply plugin: 'spring-boot'
+
+    dependencies {
+        compile project(':store-api')
+    }
 }
