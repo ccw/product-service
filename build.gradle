@@ -9,6 +9,8 @@ buildscript {
         myBatisSpringVersion = '1.2.2'
         spockVersion = '1.0-groovy-2.3-SNAPSHOT'
         guavaVersion = '18.0'
+        swaggerSpringMVCVersion = '0.9.0-SNAPSHOT'
+        swaggerSpringMVCUIVersion = '0.2'
     }
     repositories {
         mavenCentral()
@@ -50,9 +52,11 @@ subprojects {
 
     repositories {
         mavenCentral()
-        maven { url "http://repo.spring.io/snapshot" }
-        maven { url "http://repo.spring.io/milestone" }
-        maven { url "http://gcartifacts.digitalriver.com/nexus/content/repositories/Internal1/" }
+        maven { url 'http://repo.spring.io/snapshot' }
+        maven { url 'http://repo.spring.io/milestone' }
+        maven { url 'http://oss.jfrog.org/artifactory/oss-snapshot-local/' }
+        maven { url 'http://oss.jfrog.org/artifactory/oss-release-local/' }
+        maven { url 'http://gcartifacts.digitalriver.com/nexus/content/repositories/Internal1/' }
     }
 
     dependencies {
@@ -79,6 +83,8 @@ project(':admin-api') {
     dependencies {
         compile project(':solr-client')
         compile("org.springframework.boot:spring-boot-starter-web")
+        compile("com.mangofactory:swagger-springmvc:${swaggerSpringMVCVersion}")
+        compile("org.ajar:swagger-spring-mvc-ui:${swaggerSpringMVCUIVersion}")
         compile("org.springframework.boot:spring-boot-starter-actuator")
         compile("org.springframework.boot:spring-boot-starter-jdbc")
         compile("org.mybatis:mybatis:${myBatisVersion}")
@@ -93,6 +99,8 @@ project(':store-api') {
     dependencies {
         compile project(':solr-client')
         compile("org.springframework.boot:spring-boot-starter-web")
+        compile("com.mangofactory:swagger-springmvc:${swaggerSpringMVCVersion}")
+        compile("org.ajar:swagger-spring-mvc-ui:${swaggerSpringMVCUIVersion}")
         compile("org.springframework.boot:spring-boot-starter-actuator")
     }
 }
