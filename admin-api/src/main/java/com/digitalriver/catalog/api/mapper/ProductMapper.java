@@ -13,17 +13,17 @@ import java.util.Map;
 @Component
 public interface ProductMapper {
 
-    @Select("WITH pid AS (" +
-            "  SELECT product_id FROM cat_product WHERE product_id = #{productID} and parent_product_id is null" +
-            "  UNION" +
-            "  SELECT parent_product_id as product_id FROM cat_product WHERE product_id = #{productID}" +
-            ")" +
-            "SELECT product_id," +
-            "       external_reference_id," +
-            "       parent_product_id," +
-            "       states " +
-            "  FROM CAT_PRODUCT " +
-            " WHERE product_id in (select product_id from pid)")
+    @Select({"WITH pid AS (",
+             "  SELECT product_id FROM cat_product WHERE product_id = #{productID} and parent_product_id is null",
+             "  UNION",
+             "  SELECT parent_product_id as product_id FROM cat_product WHERE product_id = #{productID}",
+             ")",
+             "SELECT product_id,",
+             "       external_reference_id,",
+             "       parent_product_id,",
+             "       states ",
+             "  FROM CAT_PRODUCT ",
+             " WHERE product_id in (select product_id from pid)"})
     @ResultType(HashMap.class)
     @Results({
         @Result(property = "STATES", column = "STATES", javaType = Map.class, jdbcType = JdbcType.VARCHAR, typeHandler = VarCharXMLTypeHandler.class)
@@ -130,13 +130,15 @@ public interface ProductMapper {
             "      from cat_product_version v",
             "     where v.product_id in (select product_id from base_pid) and v.state_id = '53'",
             ") ",
-            "select d.product_data_id ",
+            "select d.product_data_id, ",
+            "       #{catalogID} as catalog_id ",
             " from cat_product_data d left join cat_product p on d.product_id = p.product_id, ",
             "      deployed y ",
             "where p.product_id = y.product_id ",
             "  AND d.version = y.version ",
             "union ",
-            "select d.product_data_id ",
+            "select d.product_data_id, ",
+            "       #{catalogID} as catalog_id ",
             "  from cat_product_data d left join cat_product p on d.product_id = p.product_id, ",
             "       deployed y ",
             " where p.parent_product_id = y.product_id ",
@@ -173,6 +175,7 @@ public interface ProductMapper {
              "select D.product_id,",
              "       D.product_data_id,",
              "       D.version,",
+             "       #{catalogID} as catalog_id ",
              "       D.locale,",
              "       D.display_name,",
              "       NVL(a.parent_product_id, '') BASE_PRODUCT_ID,",

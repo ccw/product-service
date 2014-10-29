@@ -32,8 +32,8 @@ public class UpdateProductServiceImpl implements UpdateProductService {
     protected ProductRepository productRepository;
 
     @Override
-    public List<Product> pushCatalog(String catalogID) {
-        final List<String> dataIDs = productMapper.getProductDataIDByCatalog(catalogID);
+    public List<Product> pushCatalog(final String aCatalogID) {
+        final List<String> dataIDs = productMapper.getProductDataIDByCatalog(aCatalogID);
         if (dataIDs == null || dataIDs.isEmpty()) {
             return Collections.emptyList();
         }
@@ -61,7 +61,9 @@ public class UpdateProductServiceImpl implements UpdateProductService {
         if (states.containsKey("Deployed")) {
             final String foundProductID = (String) product.get("PRODUCT_ID");
             final List<Product> existProducts = productRepository.findAllByBaseID(foundProductID);
-            productRepository.delete(existProducts);
+            if (!existProducts.isEmpty()) {
+                productRepository.delete(existProducts);
+            }
             final Integer version = Integer.parseInt(states.get("Deployed"));
             final List<Map<String, ?>> dataList = productMapper.getAllLocaleDisplayData(foundProductID, version);
             final List<Product> products = this.refineProductDisplayData(dataList);

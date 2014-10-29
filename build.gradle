@@ -25,30 +25,30 @@ buildscript {
     }
 }
 
-apply plugin: 'idea'
-
-idea {
-    module {
-        inheritOutputDirs = false
-        outputDir = file("$buildDir/classes/main/")
-    }
-}
-
-configurations.all {
-    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
-        if (details.requested.group == 'org.apache.tomcat.embed') {
-            details.useVersion '8.0.3'
-        }
-    }
-}
-
 subprojects {
     apply plugin: 'java'
     apply plugin: 'groovy'
+    apply plugin: 'idea'
+
     version = '0.0.1-SNAPSHOT'
 
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
+
+    idea {
+        module {
+            inheritOutputDirs = false
+            outputDir = file("$buildDir/classes/main/")
+        }
+    }
+
+    configurations.all {
+        resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+            if (details.requested.group == 'org.apache.tomcat.embed') {
+                details.useVersion '8.0.3'
+            }
+        }
+    }
 
     repositories {
         mavenCentral()
@@ -65,6 +65,7 @@ subprojects {
         testCompile("org.springframework.boot:spring-boot-starter-test")
         testCompile("org.spockframework:spock-core:${spockVersion}")
     }
+
 }
 
 task wrapper(type: Wrapper) {

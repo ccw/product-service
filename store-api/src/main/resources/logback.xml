@@ -12,6 +12,7 @@
     <logger name="org.springframework.data.solr.repository" level="DEBUG"/>
     <logger name="com.digitalriver.catalog.api.mapper" level="WARN" />
     <logger name="com.digitalriver.catalog.api.repository" level="DEBUG" />
+    <logger name="com.mangofactory.swagger" level="WARN" />
 
     <root level="INFO">
         <appender-ref ref="STDOUT" />
