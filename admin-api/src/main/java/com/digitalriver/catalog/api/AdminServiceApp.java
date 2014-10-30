@@ -26,8 +26,7 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 @ComponentScan
 @MapperScan("com.digitalriver.catalog.api.mapper")
 @EnableAutoConfiguration
-@PropertySource({"classpath:/application.properties",
-                 "classpath:/credential.properties"})
+//@PropertySource({"application.properties", "credential.properties"})
 public class AdminServiceApp {
 
     private static final Logger logger = LoggerFactory.getLogger(AdminServiceApp.class);

@@ -72,6 +72,14 @@ task wrapper(type: Wrapper) {
     gradleVersion = '1.12'
 }
 
+project(':config-server') {
+    apply plugin: 'spring-boot'
+
+    dependencies {
+        compile("org.springframework.cloud:spring-cloud-config-server:1.0.0.M1")
+    }
+}
+
 project(':solr-client') {
     dependencies {
         compile("org.springframework.data:spring-data-solr:${springDataSolrVersion}")
@@ -88,6 +96,7 @@ project(':admin-api') {
         compile("org.ajar:swagger-spring-mvc-ui:${swaggerSpringMVCUIVersion}")
         compile("org.springframework.boot:spring-boot-starter-actuator")
         compile("org.springframework.boot:spring-boot-starter-jdbc")
+        compile("org.springframework.cloud:spring-cloud-starter:1.0.0.M1")
         compile("org.mybatis:mybatis:${myBatisVersion}")
         compile("org.mybatis:mybatis-spring:${myBatisSpringVersion}")
         compile("oracle:ojdbc6:${oracleJDBCDriverVersion}")

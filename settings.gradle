@@ -1,1 +1,1 @@
-include 'solr-client', 'admin-api', 'store-api', 'sample-site'
+include 'config-server', 'solr-client', 'admin-api', 'store-api', 'sample-site'

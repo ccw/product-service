@@ -1,0 +1,5 @@
+mainClassName = 'com.digitalriver.catalog.config.ConfigServerApp'
+
+jar {
+    baseName = 'product-service-config'
+}

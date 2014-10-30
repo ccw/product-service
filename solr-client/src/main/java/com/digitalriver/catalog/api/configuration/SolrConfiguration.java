@@ -5,13 +5,11 @@ import org.apache.solr.client.solrj.impl.CloudSolrServer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.solr.core.SolrOperations;
 import org.springframework.data.solr.core.SolrTemplate;
 import org.springframework.data.solr.repository.config.EnableSolrRepositories;
 
 @Configuration
-@PropertySource({"classpath:/solr.properties"})
 @EnableSolrRepositories("com.digitalriver.catalog.api.repository")
 public class SolrConfiguration {
 
