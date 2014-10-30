@@ -4,6 +4,7 @@ buildscript {
         springBootVersion = '1.2.0.M2'
         springLoadedVersion = '1.2.1.RELEASE'
         springDataSolrVersion = '1.4.0.BUILD-SNAPSHOT'
+        springCloudConfigVersion = '1.0.0.M1'
         oracleJDBCDriverVersion = '11.2.0.3'
         myBatisVersion = '3.2.7'
         myBatisSpringVersion = '1.2.2'
@@ -76,7 +77,7 @@ project(':config-server') {
     apply plugin: 'spring-boot'
 
     dependencies {
-        compile("org.springframework.cloud:spring-cloud-config-server:1.0.0.M1")
+        compile("org.springframework.cloud:spring-cloud-config-server:${springCloudConfigVersion}")
     }
 }
 
@@ -96,7 +97,7 @@ project(':admin-api') {
         compile("org.ajar:swagger-spring-mvc-ui:${swaggerSpringMVCUIVersion}")
         compile("org.springframework.boot:spring-boot-starter-actuator")
         compile("org.springframework.boot:spring-boot-starter-jdbc")
-        compile("org.springframework.cloud:spring-cloud-starter:1.0.0.M1")
+        compile("org.springframework.cloud:spring-cloud-starter:${springCloudConfigVersion}")
         compile("org.mybatis:mybatis:${myBatisVersion}")
         compile("org.mybatis:mybatis-spring:${myBatisSpringVersion}")
         compile("oracle:ojdbc6:${oracleJDBCDriverVersion}")
@@ -112,6 +113,7 @@ project(':store-api') {
         compile("com.mangofactory:swagger-springmvc:${swaggerSpringMVCVersion}")
         compile("org.ajar:swagger-spring-mvc-ui:${swaggerSpringMVCUIVersion}")
         compile("org.springframework.boot:spring-boot-starter-actuator")
+        compile("org.springframework.cloud:spring-cloud-starter:${springCloudConfigVersion}")
     }
 }
 
