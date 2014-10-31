@@ -1,7 +1,7 @@
 Product Service PoC
 ===============
 
-This project currently contains four sub projects --
+This project currently contains five sub projects --
 
  *  Solr Client
 
