@@ -1,31 +1,35 @@
 Product Service PoC
 ===============
 
-This project currently contains five sub projects --
+This is the project to showcase how micro services and Solr Cloud can be leveraged to fulfill the upcoming BMF business requirement. Currently there are some sub projects conducted to represent each basic functional roles in the overall archiecture --
 
- *  Solr Client
+ *  Config API
 
-    A wrapper to communicate external Solr servers and is commonly used by other sub project
-
- *  Config Server
-
-    A configuration server to serve for client to fetch necessary environment properties.
+    The configuration API for other API services to fetch necessary environment specific properties. 
 
  *  Admin API
 
-    The administration API service application
+    The administration API for data manipulations. 
 
  *  Store API
 
-    The front end API service for the composition of JSON information required by storefronts
+    The front end API to be used for storefront data rendering. 
 
- *  and a sample site web application
+ *  Sample site
 
-    To demonstrate the usage of store API service
+    The web site.
 
-This project is built with Java 8 and [Spring Boot](http://projects.spring.io/spring-boot/) and managed by [Gradle](http://http://www.gradle.org).
+Technical Spec
+----------------
+This project is mainly implemented with [Spring Boot](http://projects.spring.io/spring-boot/), [Spring Data Solr](http://projects.spring.io/spring-data-solr/) and [Spring Cloud Config](http://cloud.spring.io/spring-cloud-config/).
 
-To build all the sub projects at once, please simply type `gradle clean build` under the project root in the terminal command line (or run the task in any supported IDE).
-Then using `java -jar <SUB_PROJECT_DIST_JAR>` to instantiate any of the desired services.
 
-Or, by typing `gradle clean :<SUB_PROJECT_NAME>:bootRun` to startup the desired service with Spring Boot directly.
+Build and Run
+----------------
+[Gradle](http://http://www.gradle.org) and Java 8 are required to build and run this project. 
+
+To build all the sub projects at once, please run `gradle clean build` under the project root (or with the assist of IDEs).
+After the project being built, simply run `java -jar <SUB_PROJECT_DIST_JAR>` can instantiate any of the desired services.
+
+Alternatively, run `gradle clean :<SUB_PROJECT_NAME>:bootRun` can also launch the desired service under Spring Boot directly.
+
