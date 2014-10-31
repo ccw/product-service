@@ -2,4 +2,7 @@ mainClassName = 'com.digitalriver.catalog.api.StoreServiceApp'
 
 jar {
     baseName = 'product-service-sample'
+    from("${projectDir}/src/main/webapp") {
+        into "META-INF/resources"
+    }
 }
