@@ -30,16 +30,7 @@ public class ApiDocConfiguration {
                                             "service@digitalriver.com",
                                             "Digital River",
                                             "https://gc.digitalriver.com/store/defaults/en_US/DisplayDRTermsAndConditionsPage/eCommerceProvider.Digital+River,+Inc."))
-                       .apiVersion("0.0.1")
-//                       .includePatterns(".*solr.*",
-//                                        ".*health.*",
-//                                        ".*beans.*",
-//                                        ".*info.*",
-//                                        ".*metrics.*",
-//                                        ".*trace.*",
-//                                        ".*configprops.*",
-//                                        ".*shutdown.*")
-                ;
+                       .apiVersion("0.0.1");
     }
 
 

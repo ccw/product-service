@@ -22,9 +22,4 @@ public class FetchProductController {
         return new JsonBuilder(service.get(productID, locale)).toPrettyString();
     }
 
-//    @RequestMapping(method = RequestMethod.GET, value = "/db/{locale}/{productID}", produces = "application/json")
-//    public String load(@PathVariable String productID, @PathVariable String locale) throws ProductException {
-//        return new JsonBuilder(service.load(productID, locale)).toPrettyString();
-//    }
-
 }

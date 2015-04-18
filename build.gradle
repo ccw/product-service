@@ -19,6 +19,7 @@ buildscript {
         maven { url 'http://repo.spring.io/milestone' }
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
         maven { url 'https://oss.sonatype.org/content/repositories/github-releases' }
+        maven { url 'http://typesafe.artifactoryonline.com/typesafe/repo/' }
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
@@ -58,6 +59,7 @@ subprojects {
         maven { url 'http://oss.jfrog.org/artifactory/oss-snapshot-local/' }
         maven { url 'http://oss.jfrog.org/artifactory/oss-release-local/' }
         maven { url 'http://gcartifacts.digitalriver.com/nexus/content/repositories/Internal1/' }
+        maven { url 'http://typesafe.artifactoryonline.com/typesafe/repo/' }
     }
 
     dependencies {
